@@ -2,67 +2,609 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mint Petroleum | Company Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mint Petroleum Ltd | Company Profile</title>
+<meta name="description" content="Mint Petroleum Ltd Company Profile - Powering Progress Consistently. Reliable petroleum products, fuel supply, and energy solutions across Zambia.">
+<meta name="theme-color" content="#1B3A2D">
+
+<!-- Preload hero/first page for instant Largest Contentful Paint -->
+<link rel="preload" as="image" href="images/webp/Mint%20Petroleum%20Company%20Profile%201_800.webp" type="image/webp" media="(max-width: 800px)" fetchpriority="high">
+<link rel="preload" as="image" href="images/webp/Mint%20Petroleum%20Company%20Profile%201.webp" type="image/webp" media="(min-width: 801px)" fetchpriority="high">
+
 <style>
+  :root {
+    --primary: #1B3A2D;
+    --primary-dark: #12271E;
+    --gold: #C8962E;
+    --gold-hover: #b08225;
+    --accent: #25D366;
+    --bg: #F0F2F5;
+    --text: #1B2A4A;
+    --card-bg: #FFFFFF;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #eee; font-family: Arial, sans-serif; }
+  
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 60px;
+  }
 
   /* Sticky top bar */
-  .bar { position: sticky; top: 0; z-index: 10; background: #fff;
-         display: flex; align-items: center; gap: 8px; padding: 8px 10px;
-         box-shadow: 0 2px 6px rgba(0,0,0,.15); }
-  .bar img { height: 32px; margin-right: auto; }
-  .bar a { text-decoration: none; color: #fff; font-size: 14px; font-weight: bold;
-           padding: 8px 12px; border-radius: 6px; background: #222; }
-  .bar a.wa { background: #25D366; }
+  .bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
 
-  /* Pages */
-  .pages { max-width: 800px; margin: 0 auto; }
-  .pages img { display: block; width: 100%; height: auto; margin-bottom: 4px; }
+  .bar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
 
-  /* Download button */
-  .dl { text-align: center; padding: 24px 12px 40px; }
-  .dl a { display: inline-block; background: #222; color: #fff; text-decoration: none;
-          padding: 14px 24px; border-radius: 8px; font-weight: bold; }
+  .bar-brand img {
+    height: 36px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .btn {
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 11px;
+    border-radius: 6px;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+  }
+  .btn:active { transform: scale(0.96); }
+
+  .btn-call { background: var(--primary); }
+  .btn-call:hover { background: var(--primary-dark); }
+  .btn-wa { background: var(--accent); }
+  .btn-email { background: #2C3E50; }
+  .btn-v2 {
+    background: linear-gradient(135deg, #1B3A2D 0%, #C8962E 100%);
+    box-shadow: 0 2px 6px rgba(200, 150, 46, 0.35);
+  }
+
+  /* Version switcher banner */
+  .v2-banner {
+    max-width: 800px;
+    margin: 10px auto 0;
+    padding: 8px 14px;
+    background: #FFFFFF;
+    border-left: 4px solid var(--gold);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .v2-banner a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .v2-banner a:hover { text-decoration: underline; }
+
+  /* Gallery pages container */
+  .pages {
+    max-width: 800px;
+    margin: 10px auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  /* Page wrapper with strict aspect ratio to prevent CLS */
+  .page-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #E5E7EB;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .page-box picture,
+  .page-box img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Floating page counter badge & TOC trigger */
+  .page-counter {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 90;
+    background: rgba(27, 58, 45, 0.92);
+    color: #FFFFFF;
+    backdrop-filter: blur(8px);
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .page-counter:hover {
+    background: #1B3A2D;
+    transform: translateY(-2px);
+  }
+
+  /* Quick Table of Contents Modal */
+  .toc-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .toc-modal-backdrop.active { display: flex; }
+
+  .toc-modal {
+    background: #FFFFFF;
+    border-radius: 12px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  .toc-header {
+    background: var(--primary);
+    color: #fff;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .toc-header h3 { font-size: 16px; font-weight: 600; }
+  .toc-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .toc-list {
+    overflow-y: auto;
+    padding: 10px 0;
+    list-style: none;
+  }
+  .toc-list li a {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 18px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .toc-list li a:hover {
+    background: #F4F9F6;
+    color: var(--primary);
+  }
+  .toc-list li a span.page-num {
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 12px;
+  }
+
+  /* Download & Footer section */
+  .footer-card {
+    max-width: 800px;
+    margin: 20px auto 0;
+    padding: 28px 20px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .footer-card h2 {
+    font-size: 20px;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .footer-card p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .footer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .btn-pdf {
+    background: var(--primary);
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-pdf:hover { background: var(--primary-dark); }
+
+  .btn-v2-alt {
+    background: var(--gold);
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-v2-alt:hover { background: var(--gold-hover); }
+
+  .footer-meta {
+    font-size: 12px;
+    color: #888;
+    border-top: 1px solid #EEE;
+    padding-top: 16px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 540px) {
+    .bar { padding: 8px 10px; }
+    .bar-brand img { height: 30px; }
+    .btn { font-size: 12px; padding: 6px 9px; }
+    .pages { padding: 0 4px; gap: 6px; }
+    .v2-banner { margin: 6px 4px 0; font-size: 12px; }
+    .page-counter { bottom: 14px; right: 14px; font-size: 11px; padding: 6px 12px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- 1. TOP BAR: change logo, phone, WhatsApp number (country code, no + or spaces), email -->
-<div class="bar">
-  <img src="Logo.jpg" alt="Mint Petroleum logo">
-  <a href="tel:+260978490936">Call</a>
-  <a class="wa" href="https://wa.me/260978490936">WhatsApp</a>
-  <a href="mailto:info@mintpetroleum.com">Email</a>
+<!-- TOP STICKY BAR -->
+<header class="bar">
+  <a href="#" class="bar-brand" title="Mint Petroleum Ltd">
+    <img src="Logo.jpg" alt="Mint Petroleum logo" width="130" height="36">
+  </a>
+  <div class="bar-actions">
+    <a class="btn btn-call" href="tel:+260978490936" title="Call Us">📞 Call</a>
+    <a class="btn btn-wa" href="https://wa.me/260978490936" target="_blank" rel="noopener" title="WhatsApp Chat">💬 WA</a>
+    <a class="btn btn-email" href="mailto:info@mintpetroleum.com" title="Email Us">✉️ Email</a>
+    <a class="btn btn-v2" href="v2.html" title="Switch to Interactive Web Version">🌐 V2 Web</a>
+  </div>
+</header>
+
+<!-- QUICK SWITCH BANNER -->
+<aside class="v2-banner">
+  <span>💡 Looking for the interactive webpage version?</span>
+  <a href="v2.html">Explore Version 2 &rarr;</a>
+</aside>
+
+<!-- PAGES CONTAINER: 18 HIGH-PERFORMANCE RESPONSIVE PROFILE PAGES -->
+<main class="pages" id="slides-container">
+
+  <!-- PAGE 1 (LCP: HIGH PRIORITY PRELOADED) -->
+  <div class="page-box" id="page-1" data-page="1" data-title="Cover">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%201_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%201.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%201_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%201_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%201_1600.jpg" alt="Mint Petroleum Company Profile - Cover" width="1600" height="900" fetchpriority="high" decoding="sync">
+    </picture>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page-box" id="page-2" data-page="2" data-title="Table of Contents">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%202_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%202.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%202_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%202_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%202_1600.jpg" alt="Table of Contents" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="page-box" id="page-3" data-page="3" data-title="Managing Director's Message">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%203_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%203.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%203_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%203_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%203_1600.jpg" alt="Managing Director's Message" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 4 -->
+  <div class="page-box" id="page-4" data-page="4" data-title="Who We Are">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%204_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%204.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%204_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%204_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%204_1600.jpg" alt="Who We Are" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 5 -->
+  <div class="page-box" id="page-5" data-page="5" data-title="Our Strategic Direction">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%205_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%205.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%205_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%205_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%205_1600.jpg" alt="Our Strategic Direction" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 6 -->
+  <div class="page-box" id="page-6" data-page="6" data-title="Fleet & Delivery">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%206_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%206.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%206_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%206_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%206_1600.jpg" alt="Fleet & Delivery" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 7 -->
+  <div class="page-box" id="page-7" data-page="7" data-title="The Mint Way - Core Values">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%207_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%207.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%207_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%207_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%207_1600.jpg" alt="The Mint Way (Core Values)" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 8 -->
+  <div class="page-box" id="page-8" data-page="8" data-title="Our Energy Solutions">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%208_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%208.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%208_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%208_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%208_1600.jpg" alt="Our Energy Solutions" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 9 -->
+  <div class="page-box" id="page-9" data-page="9" data-title="Operations & Logistics">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%209_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%209.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%209_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%209_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%209_1600.jpg" alt="Operations & Logistics" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 10 -->
+  <div class="page-box" id="page-10" data-page="10" data-title="Integrated Energy Services">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2010_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2010.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2010_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2010_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%2010_1600.jpg" alt="Integrated Energy Services" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 11 -->
+  <div class="page-box" id="page-11" data-page="11" data-title="Industries We Serve">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2011_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2011.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2011_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2011_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%2011_1600.jpg" alt="Industries We Serve" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 12 -->
+  <div class="page-box" id="page-12" data-page="12" data-title="Depot & Infrastructure">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2012_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2012.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2012_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2012_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%2012_1600.jpg" alt="Depot & Infrastructure" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 13 -->
+  <div class="page-box" id="page-13" data-page="13" data-title="HSSE Responsibility">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2013_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2013.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2013_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2013_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%2013_1600.jpg" alt="Health, Safety, Security & Environment" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 14 -->
+  <div class="page-box" id="page-14" data-page="14" data-title="Sustainable Partnership">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2014_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2014.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2014_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2014_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%2014_1600.jpg" alt="Sustainable Partnership" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 15 -->
+  <div class="page-box" id="page-15" data-page="15" data-title="Why Choose Mint Petroleum">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2015_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2015.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2015_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2015_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%2015_1600.jpg" alt="Why Choose Mint Petroleum Ltd" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 16 -->
+  <div class="page-box" id="page-16" data-page="16" data-title="Statutory Documents - PACRA & ZRA">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2016_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2016.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2016_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2016_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%2016_1600.jpg" alt="Statutory Documents (PACRA & ZRA)" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 17 -->
+  <div class="page-box" id="page-17" data-page="17" data-title="Statutory Documents - ZPPA & TPIN">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2017_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2017.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2017_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2017_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%2017_1600.jpg" alt="Statutory Documents (ZPPA & TPIN)" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+  <!-- PAGE 18 -->
+  <div class="page-box" id="page-18" data-page="18" data-title="Contact & Let's Power Your Success">
+    <picture>
+      <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2018_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2018.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2018_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2018_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
+      <img src="images/Mint%20Petroleum%20Company%20Profile%2018_1600.jpg" alt="Let's Power Your Success - Contact" width="1600" height="900" loading="lazy" decoding="async">
+    </picture>
+  </div>
+
+</main>
+
+<!-- BOTTOM DOWNLOAD & INFORMATION CARD -->
+<footer class="footer-card">
+  <h2>Mint Petroleum Ltd</h2>
+  <p>Powering Progress Consistently across Zambia and the Southern African region.<br>Download the official PDF document or explore our interactive web version.</p>
+  
+  <div class="footer-actions">
+    <a class="btn-pdf" href="Mint%20Petroleum%20Company%20Profile.pdf" download title="Download official PDF">
+      📥 Download Full Profile (PDF)
+    </a>
+    <a class="btn-v2-alt" href="v2.html" title="Explore Version 2 Interactive Website">
+      🌐 View Version 2 (Interactive Site) &rarr;
+    </a>
+  </div>
+
+  <div class="footer-meta">
+    &copy; 2026 Mint Petroleum Ltd. Plot No. 26211 Augustine Lungu Road, Rockfield Chalala, Lusaka, Zambia.
+  </div>
+</footer>
+
+<!-- FLOATING PAGE COUNTER & TOC BUTTON -->
+<div class="page-counter" id="pageBadge" title="Click to jump to any page">
+  <span>📄 <span id="currentPageNum">1</span> / 18</span>
+  <span style="opacity: 0.6; font-size: 10px;">☰ Jump</span>
 </div>
 
-<!-- 2. PAGES: one image per profile page, in order. Add or remove lines as needed. -->
-<div class="pages">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%201.jpg" alt="Company profile page 1">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%202.jpg" alt="Company profile page 2" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%203.jpg" alt="Company profile page 3" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%204.jpg" alt="Company profile page 4" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%205.jpg" alt="Company profile page 5" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%206.jpg" alt="Company profile page 6" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%207.jpg" alt="Company profile page 7" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%208.jpg" alt="Company profile page 8" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%209.jpg" alt="Company profile page 9" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%2010.jpg" alt="Company profile page 10" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%2011.jpg" alt="Company profile page 11" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%2012.jpg" alt="Company profile page 12" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%2013.jpg" alt="Company profile page 13" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%2014.jpg" alt="Company profile page 14" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%2015.jpg" alt="Company profile page 15" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%2016.jpg" alt="Company profile page 16" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%2017.jpg" alt="Company profile page 17" loading="lazy">
-  <img src="images/Mint%20Petroleum%20Company%20Profile%2018.jpg" alt="Company profile page 18" loading="lazy">
+<!-- QUICK JUMP MODAL -->
+<div class="toc-modal-backdrop" id="tocModal">
+  <div class="toc-modal">
+    <div class="toc-header">
+      <h3>Quick Jump to Page</h3>
+      <button class="toc-close" id="tocCloseBtn">&times;</button>
+    </div>
+    <ul class="toc-list" id="tocList">
+      <li><a href="#page-1"><span class="page-title">1. Cover Page</span><span class="page-num">Pg 01</span></a></li>
+      <li><a href="#page-2"><span class="page-title">2. Table of Contents</span><span class="page-num">Pg 02</span></a></li>
+      <li><a href="#page-3"><span class="page-title">3. Managing Director's Message</span><span class="page-num">Pg 03</span></a></li>
+      <li><a href="#page-4"><span class="page-title">4. Who We Are</span><span class="page-num">Pg 04</span></a></li>
+      <li><a href="#page-5"><span class="page-title">5. Our Strategic Direction</span><span class="page-num">Pg 05</span></a></li>
+      <li><a href="#page-6"><span class="page-title">6. Fleet & Logistics Showcase</span><span class="page-num">Pg 06</span></a></li>
+      <li><a href="#page-7"><span class="page-title">7. The Mint Way (Core Values)</span><span class="page-num">Pg 07</span></a></li>
+      <li><a href="#page-8"><span class="page-title">8. Our Energy Solutions</span><span class="page-num">Pg 08</span></a></li>
+      <li><a href="#page-9"><span class="page-title">9. Operational Capacity</span><span class="page-num">Pg 09</span></a></li>
+      <li><a href="#page-10"><span class="page-title">10. Integrated Energy Services</span><span class="page-num">Pg 10</span></a></li>
+      <li><a href="#page-11"><span class="page-title">11. Industries We Serve</span><span class="page-num">Pg 11</span></a></li>
+      <li><a href="#page-12"><span class="page-title">12. Depots & Infrastructure</span><span class="page-num">Pg 12</span></a></li>
+      <li><a href="#page-13"><span class="page-title">13. HSSE Responsibility</span><span class="page-num">Pg 13</span></a></li>
+      <li><a href="#page-14"><span class="page-title">14. Sustainable Partnership</span><span class="page-num">Pg 14</span></a></li>
+      <li><a href="#page-15"><span class="page-title">15. Why Choose Mint Petroleum</span><span class="page-num">Pg 15</span></a></li>
+      <li><a href="#page-16"><span class="page-title">16. Statutory: PACRA & Tax Clearance</span><span class="page-num">Pg 16</span></a></li>
+      <li><a href="#page-17"><span class="page-title">17. Statutory: ZPPA & TPIN</span><span class="page-num">Pg 17</span></a></li>
+      <li><a href="#page-18"><span class="page-title">18. Contact & Connect</span><span class="page-num">Pg 18</span></a></li>
+    </ul>
+  </div>
 </div>
 
-<!-- 3. DOWNLOAD: put the PDF in the same folder and match the file name -->
-<div class="dl">
-  <a href="Mint%20Petroleum%20Company%20Profile.pdf" download>Download Full Profile (PDF)</a>
-</div>
+<script>
+  // High-performance IntersectionObserver for page indicator
+  const pageBoxes = document.querySelectorAll('.page-box');
+  const currentBadge = document.getElementById('currentPageNum');
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const page = entry.target.getAttribute('data-page');
+          if (page && currentBadge) {
+            currentBadge.textContent = page;
+          }
+        }
+      });
+    }, {
+      rootMargin: '-40% 0px -40% 0px',
+      threshold: 0
+    });
+
+    pageBoxes.forEach(box => observer.observe(box));
+  }
+
+  // Quick jump modal handling
+  const badge = document.getElementById('pageBadge');
+  const modal = document.getElementById('tocModal');
+  const closeBtn = document.getElementById('tocCloseBtn');
+  const tocLinks = document.querySelectorAll('#tocList a');
+
+  badge.addEventListener('click', () => {
+    modal.classList.add('active');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.classList.remove('active');
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.remove('active');
+  });
+
+  tocLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+  });
+</script>
 
 </body>
 </html>
