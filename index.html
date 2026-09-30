@@ -25,12 +25,16 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
-    padding-bottom: 60px;
+    padding-bottom: 80px;
   }
 
   /* Sticky top bar */
@@ -98,12 +102,8 @@
     margin: 10px auto 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     padding: 0 8px;
-  }
-
-  html {
-    scroll-behavior: smooth;
   }
 
   /* Page wrapper with strict aspect ratio to prevent CLS */
@@ -115,7 +115,8 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    scroll-margin-top: 56px;
+    scroll-margin-top: 60px;
+    cursor: zoom-in;
   }
 
   .page-box picture,
@@ -124,32 +125,80 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    pointer-events: none;
   }
 
-  /* Floating page counter badge & TOC trigger */
-  .page-counter {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 90;
-    background: rgba(27, 58, 45, 0.92);
+  /* Zoom hint badge on slide */
+  .slide-zoom-hint {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.65);
     color: #FFFFFF;
-    backdrop-filter: blur(8px);
-    padding: 8px 14px;
-    border-radius: 30px;
-    font-size: 12px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    font-size: 11px;
     font-weight: 600;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    padding: 4px 8px;
+    border-radius: 20px;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+  }
+  .page-box:hover .slide-zoom-hint {
+    opacity: 1;
+    background: var(--primary);
+  }
+
+  /* Floating Bottom Bar: Jump & Zoom */
+  .floating-bar {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 90;
     display: flex;
     align-items: center;
     gap: 8px;
-    cursor: pointer;
-    user-select: none;
-    transition: transform 0.2s ease, background 0.2s ease;
   }
-  .page-counter:hover {
+
+  .float-pill {
+    color: #FFFFFF;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 9px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.28);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: none;
+    user-select: none;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .float-pill:active { transform: scale(0.95); }
+
+  .float-pill.btn-jump {
+    background: rgba(27, 58, 45, 0.94);
+  }
+  .float-pill.btn-jump:hover {
     background: #1B3A2D;
-    transform: translateY(-2px);
+  }
+
+  .float-pill.btn-zoom {
+    background: var(--gold);
+    color: #1B3A2D;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(200, 150, 46, 0.45);
+  }
+  .float-pill.btn-zoom:hover {
+    background: var(--gold-hover);
+    color: #FFFFFF;
   }
 
   /* Quick Table of Contents Modal */
@@ -157,25 +206,26 @@
     display: none;
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.65);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     z-index: 200;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 16px;
   }
   .toc-modal-backdrop.active { display: flex; }
 
   .toc-modal {
     background: #FFFFFF;
-    border-radius: 12px;
+    border-radius: 14px;
     max-width: 480px;
     width: 100%;
-    max-height: 80vh;
+    max-height: 85vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
   }
   .toc-header {
     background: var(--primary);
@@ -190,32 +240,244 @@
     background: none;
     border: none;
     color: #fff;
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
     line-height: 1;
+    padding: 0 4px;
+  }
+  .toc-subtitle {
+    font-size: 12px;
+    color: #666;
+    background: #F9FAFB;
+    padding: 8px 18px;
+    border-bottom: 1px solid #EEE;
   }
   .toc-list {
     overflow-y: auto;
-    padding: 10px 0;
+    padding: 4px 0;
     list-style: none;
+    -webkit-overflow-scrolling: touch;
   }
-  .toc-list li a {
+  .toc-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 8px;
+  }
+  .toc-list li:hover {
+    background: #F4F9F6;
+  }
+  .toc-jump-link {
+    flex: 1;
     display: flex;
     justify-content: space-between;
-    padding: 10px 18px;
+    align-items: center;
     color: #333;
     text-decoration: none;
-    font-size: 14px;
-    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+    padding: 4px 0;
   }
-  .toc-list li a:hover {
-    background: #F4F9F6;
+  .toc-jump-link:hover {
     color: var(--primary);
   }
-  .toc-list li a span.page-num {
+  .toc-jump-link span.page-num {
     font-weight: 700;
     color: var(--gold);
     font-size: 12px;
+    margin-left: 8px;
+  }
+  .toc-zoom-direct {
+    background: #EEF2F0;
+    border: 1px solid #CCD6D1;
+    color: var(--primary);
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .toc-zoom-direct:hover {
+    background: var(--gold);
+    color: #FFF;
+    border-color: var(--gold);
+  }
+
+  /* FULLSCREEN ZOOM READER MODAL */
+  .zoom-viewer {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #000000;
+    z-index: 300;
+    flex-direction: column;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .zoom-viewer.active {
+    display: flex;
+  }
+
+  .zv-topbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 310;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #FFFFFF;
+  }
+  .zv-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .zv-badge {
+    background: var(--gold);
+    color: #12271E;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+  }
+  .zv-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #E5E7EB;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .zv-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .zv-btn-text {
+    background: rgba(255,255,255,0.2);
+    color: #FFFFFF;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .zv-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: #FFFFFF;
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .zv-canvas {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .zv-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transform-origin: center center;
+    transition: transform 0.08s ease-out;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  .zv-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0; right: 0;
+    z-index: 310;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .zv-btn {
+    background: rgba(30, 30, 30, 0.85);
+    color: #FFFFFF;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 8px 14px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .zv-btn:active { transform: scale(0.95); }
+
+  .zv-zoom-cluster {
+    display: flex;
+    align-items: center;
+    background: rgba(30, 30, 30, 0.85);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 24px;
+    padding: 3px 6px;
+    backdrop-filter: blur(8px);
+  }
+  .zv-zoom-cluster button {
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 700;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .zv-zoom-cluster span {
+    font-size: 12px;
+    color: #E5E7EB;
+    min-width: 44px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .zv-hint {
+    position: absolute;
+    bottom: 74px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: #CCC;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    pointer-events: none;
+    white-space: nowrap;
   }
 
   /* Download & Footer section */
@@ -272,9 +534,9 @@
     .bar { padding: 8px 10px; }
     .bar-brand img { height: 30px; }
     .btn { font-size: 12px; padding: 6px 9px; }
-    .pages { padding: 0 4px; gap: 6px; }
-    .v2-banner { margin: 6px 4px 0; font-size: 12px; }
-    .page-counter { bottom: 14px; right: 14px; font-size: 11px; padding: 6px 12px; }
+    .pages { padding: 0 4px; gap: 8px; }
+    .floating-bar { bottom: 12px; right: 12px; gap: 6px; }
+    .float-pill { font-size: 11px; padding: 7px 11px; }
   }
 </style>
 </head>
@@ -295,13 +557,14 @@
 <!-- PAGES CONTAINER: 18 HIGH-PERFORMANCE RESPONSIVE PROFILE PAGES -->
 <main class="pages" id="slides-container">
 
-  <!-- PAGE 1 (LCP: HIGH PRIORITY PRELOADED) -->
+  <!-- PAGE 1 -->
   <div class="page-box" id="page-1" data-page="1" data-title="Cover">
     <picture>
       <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%201_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%201.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%201_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%201_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%201_1600.jpg" alt="Mint Petroleum Company Profile - Cover" width="1600" height="900" fetchpriority="high" decoding="sync">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 2 -->
@@ -311,6 +574,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%202_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%202_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%202_1600.jpg" alt="Table of Contents" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 3 -->
@@ -320,6 +584,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%203_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%203_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%203_1600.jpg" alt="Managing Director's Message" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 4 -->
@@ -329,6 +594,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%204_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%204_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%204_1600.jpg" alt="Who We Are" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 5 -->
@@ -338,6 +604,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%205_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%205_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%205_1600.jpg" alt="Our Strategic Direction" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 6 -->
@@ -347,6 +614,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%206_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%206_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%206_1600.jpg" alt="Fleet & Delivery" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 7 -->
@@ -356,6 +624,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%207_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%207_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%207_1600.jpg" alt="The Mint Way (Core Values)" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 8 -->
@@ -365,6 +634,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%208_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%208_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%208_1600.jpg" alt="Our Energy Solutions" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 9 -->
@@ -374,6 +644,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%209_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%209_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%209_1600.jpg" alt="Operations & Logistics" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 10 -->
@@ -383,6 +654,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2010_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2010_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%2010_1600.jpg" alt="Integrated Energy Services" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 11 -->
@@ -392,6 +664,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2011_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2011_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%2011_1600.jpg" alt="Industries We Serve" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 12 -->
@@ -401,6 +674,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2012_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2012_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%2012_1600.jpg" alt="Depot & Infrastructure" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 13 -->
@@ -410,6 +684,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2013_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2013_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%2013_1600.jpg" alt="Health, Safety, Security & Environment" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 14 -->
@@ -419,6 +694,7 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2014_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2014_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%2014_1600.jpg" alt="Sustainable Partnership" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 15 -->
@@ -428,33 +704,37 @@
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2015_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2015_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%2015_1600.jpg" alt="Why Choose Mint Petroleum Ltd" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 16 -->
-  <div class="page-box" id="page-16" data-page="16" data-title="Statutory Documents - PACRA & ZRA">
+  <div class="page-box" id="page-16" data-page="16" data-title="Statutory: PACRA & Tax Clearance">
     <picture>
       <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2016_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2016.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2016_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2016_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%2016_1600.jpg" alt="Statutory Documents (PACRA & ZRA)" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 17 -->
-  <div class="page-box" id="page-17" data-page="17" data-title="Statutory Documents - ZPPA & TPIN">
+  <div class="page-box" id="page-17" data-page="17" data-title="Statutory: ZPPA & TPIN">
     <picture>
       <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2017_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2017.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2017_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2017_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%2017_1600.jpg" alt="Statutory Documents (ZPPA & TPIN)" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
   <!-- PAGE 18 -->
-  <div class="page-box" id="page-18" data-page="18" data-title="Contact & Let's Power Your Success">
+  <div class="page-box" id="page-18" data-page="18" data-title="Contact & Connect">
     <picture>
       <source type="image/webp" srcset="images/webp/Mint%20Petroleum%20Company%20Profile%2018_800.webp 800w, images/webp/Mint%20Petroleum%20Company%20Profile%2018.webp 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <source type="image/jpeg" srcset="images/Mint%20Petroleum%20Company%20Profile%2018_800.jpg 800w, images/Mint%20Petroleum%20Company%20Profile%2018_1600.jpg 1600w" sizes="(max-width: 800px) 100vw, 800px">
       <img src="images/Mint%20Petroleum%20Company%20Profile%2018_1600.jpg" alt="Let's Power Your Success - Contact" width="1600" height="900" loading="lazy" decoding="async">
     </picture>
+    <div class="slide-zoom-hint">🔍 Tap to Zoom</div>
   </div>
 
 </main>
@@ -475,87 +755,404 @@
   </div>
 </footer>
 
-<!-- FLOATING PAGE COUNTER & TOC BUTTON -->
-<div class="page-counter" id="pageBadge" title="Click to jump to any page">
-  <span>📄 <span id="currentPageNum">1</span> / 18</span>
-  <span style="opacity: 0.6; font-size: 10px;">☰ Jump</span>
+<!-- FLOATING ACTION BUTTONS: JUMP & ZOOM -->
+<div class="floating-bar">
+  <button class="float-pill btn-jump" id="pageBadge" title="Jump directly to any section">
+    <span>📄 <span id="currentPageNum">1</span> / 18</span>
+    <span>☰ Jump</span>
+  </button>
+  <button class="float-pill btn-zoom" id="openZoomBtn" title="Zoom current page for reading on mobile">
+    <span>🔍 Zoom & Read</span>
+  </button>
 </div>
 
 <!-- QUICK JUMP MODAL -->
 <div class="toc-modal-backdrop" id="tocModal">
   <div class="toc-modal">
     <div class="toc-header">
-      <h3>Quick Jump to Page</h3>
+      <h3>Jump to Section</h3>
       <button class="toc-close" id="tocCloseBtn">&times;</button>
     </div>
+    <div class="toc-subtitle">Tap slide title to scroll, or tap 🔍 Zoom to read fullscreen:</div>
     <ul class="toc-list" id="tocList">
-      <li><a href="#page-1"><span class="page-title">1. Cover Page</span><span class="page-num">Pg 01</span></a></li>
-      <li><a href="#page-2"><span class="page-title">2. Table of Contents</span><span class="page-num">Pg 02</span></a></li>
-      <li><a href="#page-3"><span class="page-title">3. Managing Director's Message</span><span class="page-num">Pg 03</span></a></li>
-      <li><a href="#page-4"><span class="page-title">4. Who We Are</span><span class="page-num">Pg 04</span></a></li>
-      <li><a href="#page-5"><span class="page-title">5. Our Strategic Direction</span><span class="page-num">Pg 05</span></a></li>
-      <li><a href="#page-6"><span class="page-title">6. Fleet & Logistics Showcase</span><span class="page-num">Pg 06</span></a></li>
-      <li><a href="#page-7"><span class="page-title">7. The Mint Way (Core Values)</span><span class="page-num">Pg 07</span></a></li>
-      <li><a href="#page-8"><span class="page-title">8. Our Energy Solutions</span><span class="page-num">Pg 08</span></a></li>
-      <li><a href="#page-9"><span class="page-title">9. Operational Capacity</span><span class="page-num">Pg 09</span></a></li>
-      <li><a href="#page-10"><span class="page-title">10. Integrated Energy Services</span><span class="page-num">Pg 10</span></a></li>
-      <li><a href="#page-11"><span class="page-title">11. Industries We Serve</span><span class="page-num">Pg 11</span></a></li>
-      <li><a href="#page-12"><span class="page-title">12. Depots & Infrastructure</span><span class="page-num">Pg 12</span></a></li>
-      <li><a href="#page-13"><span class="page-title">13. HSSE Responsibility</span><span class="page-num">Pg 13</span></a></li>
-      <li><a href="#page-14"><span class="page-title">14. Sustainable Partnership</span><span class="page-num">Pg 14</span></a></li>
-      <li><a href="#page-15"><span class="page-title">15. Why Choose Mint Petroleum</span><span class="page-num">Pg 15</span></a></li>
-      <li><a href="#page-16"><span class="page-title">16. Statutory: PACRA & Tax Clearance</span><span class="page-num">Pg 16</span></a></li>
-      <li><a href="#page-17"><span class="page-title">17. Statutory: ZPPA & TPIN</span><span class="page-num">Pg 17</span></a></li>
-      <li><a href="#page-18"><span class="page-title">18. Contact & Connect</span><span class="page-num">Pg 18</span></a></li>
+      <li>
+        <a href="#page-1" class="toc-jump-link"><span class="page-title">1. Cover Page</span><span class="page-num">Pg 01</span></a>
+        <button class="toc-zoom-direct" data-page="1">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-2" class="toc-jump-link"><span class="page-title">2. Table of Contents</span><span class="page-num">Pg 02</span></a>
+        <button class="toc-zoom-direct" data-page="2">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-3" class="toc-jump-link"><span class="page-title">3. Managing Director's Message</span><span class="page-num">Pg 03</span></a>
+        <button class="toc-zoom-direct" data-page="3">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-4" class="toc-jump-link"><span class="page-title">4. Who We Are</span><span class="page-num">Pg 04</span></a>
+        <button class="toc-zoom-direct" data-page="4">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-5" class="toc-jump-link"><span class="page-title">5. Our Strategic Direction</span><span class="page-num">Pg 05</span></a>
+        <button class="toc-zoom-direct" data-page="5">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-6" class="toc-jump-link"><span class="page-title">6. Fleet & Logistics Showcase</span><span class="page-num">Pg 06</span></a>
+        <button class="toc-zoom-direct" data-page="6">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-7" class="toc-jump-link"><span class="page-title">7. The Mint Way (Core Values)</span><span class="page-num">Pg 07</span></a>
+        <button class="toc-zoom-direct" data-page="7">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-8" class="toc-jump-link"><span class="page-title">8. Our Energy Solutions</span><span class="page-num">Pg 08</span></a>
+        <button class="toc-zoom-direct" data-page="8">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-9" class="toc-jump-link"><span class="page-title">9. Operational Capacity</span><span class="page-num">Pg 09</span></a>
+        <button class="toc-zoom-direct" data-page="9">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-10" class="toc-jump-link"><span class="page-title">10. Integrated Energy Services</span><span class="page-num">Pg 10</span></a>
+        <button class="toc-zoom-direct" data-page="10">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-11" class="toc-jump-link"><span class="page-title">11. Industries We Serve</span><span class="page-num">Pg 11</span></a>
+        <button class="toc-zoom-direct" data-page="11">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-12" class="toc-jump-link"><span class="page-title">12. Depots & Infrastructure</span><span class="page-num">Pg 12</span></a>
+        <button class="toc-zoom-direct" data-page="12">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-13" class="toc-jump-link"><span class="page-title">13. HSSE Responsibility</span><span class="page-num">Pg 13</span></a>
+        <button class="toc-zoom-direct" data-page="13">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-14" class="toc-jump-link"><span class="page-title">14. Sustainable Partnership</span><span class="page-num">Pg 14</span></a>
+        <button class="toc-zoom-direct" data-page="14">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-15" class="toc-jump-link"><span class="page-title">15. Why Choose Mint Petroleum</span><span class="page-num">Pg 15</span></a>
+        <button class="toc-zoom-direct" data-page="15">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-16" class="toc-jump-link"><span class="page-title">16. Statutory: PACRA & Tax Clearance</span><span class="page-num">Pg 16</span></a>
+        <button class="toc-zoom-direct" data-page="16">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-17" class="toc-jump-link"><span class="page-title">17. Statutory: ZPPA & TPIN</span><span class="page-num">Pg 17</span></a>
+        <button class="toc-zoom-direct" data-page="17">🔍 Zoom</button>
+      </li>
+      <li>
+        <a href="#page-18" class="toc-jump-link"><span class="page-title">18. Contact & Connect</span><span class="page-num">Pg 18</span></a>
+        <button class="toc-zoom-direct" data-page="18">🔍 Zoom</button>
+      </li>
     </ul>
   </div>
 </div>
 
+<!-- FULLSCREEN ZOOM READER -->
+<div id="zoomViewer" class="zoom-viewer" aria-hidden="true">
+  <div class="zv-topbar">
+    <div class="zv-info">
+      <span id="zvPageNum" class="zv-badge">Page 1 / 18</span>
+      <span id="zvPageTitle" class="zv-title">Cover</span>
+    </div>
+    <div class="zv-actions">
+      <button id="zvResetBtn" class="zv-btn-text" title="Reset Zoom">Reset</button>
+      <button id="zvCloseBtn" class="zv-close" title="Close Viewer">&times;</button>
+    </div>
+  </div>
+
+  <div class="zv-canvas" id="zvCanvas">
+    <img id="zvImage" class="zv-img" src="" alt="High resolution zoom slide">
+  </div>
+
+  <div class="zv-hint">💡 Double-tap, pinch or use + / − to zoom & drag to pan</div>
+
+  <div class="zv-controls">
+    <button id="zvPrevBtn" class="zv-btn" title="Previous Slide">‹ Prev</button>
+    <div class="zv-zoom-cluster">
+      <button id="zvZoomOutBtn" title="Zoom Out">−</button>
+      <span id="zvScaleText">100%</span>
+      <button id="zvZoomInBtn" title="Zoom In">+</button>
+    </div>
+    <button id="zvNextBtn" class="zv-btn" title="Next Slide">Next ›</button>
+  </div>
+</div>
+
 <script>
+  // Slide Titles definition
+  const slideTitles = {
+    1: "Cover Page",
+    2: "Table of Contents",
+    3: "Managing Director's Message",
+    4: "Who We Are",
+    5: "Our Strategic Direction",
+    6: "Fleet & Delivery Showcase",
+    7: "The Mint Way (Core Values)",
+    8: "Our Energy Solutions",
+    9: "Operations & Logistics",
+    10: "Integrated Energy Services",
+    11: "Industries We Serve",
+    12: "Depot & Infrastructure",
+    13: "Health, Safety, Security & Environment",
+    14: "Sustainable Partnership",
+    15: "Why Choose Mint Petroleum",
+    16: "Statutory: PACRA & Tax Clearance",
+    17: "Statutory: ZPPA & TPIN",
+    18: "Let's Power Your Success (Contact)"
+  };
+
   // High-performance IntersectionObserver for page indicator
   const pageBoxes = document.querySelectorAll('.page-box');
   const currentBadge = document.getElementById('currentPageNum');
+  let currentActivePage = 1;
 
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const page = entry.target.getAttribute('data-page');
+          const page = parseInt(entry.target.getAttribute('data-page'), 10);
           if (page && currentBadge) {
+            currentActivePage = page;
             currentBadge.textContent = page;
           }
         }
       });
     }, {
-      rootMargin: '-40% 0px -40% 0px',
+      rootMargin: '-30% 0px -30% 0px',
       threshold: 0
     });
 
     pageBoxes.forEach(box => observer.observe(box));
   }
 
-  // Quick jump modal handling
-  const badge = document.getElementById('pageBadge');
+  // --- RELIABLE JUMP TO PAGE NAVIGATION ---
   const modal = document.getElementById('tocModal');
+  const badge = document.getElementById('pageBadge');
   const closeBtn = document.getElementById('tocCloseBtn');
-  const tocLinks = document.querySelectorAll('#tocList a');
 
-  badge.addEventListener('click', () => {
+  function openJumpModal() {
     modal.classList.add('active');
-  });
+  }
 
-  closeBtn.addEventListener('click', () => {
+  function closeJumpModal() {
     modal.classList.remove('active');
-  });
+  }
 
+  badge.addEventListener('click', openJumpModal);
+  closeBtn.addEventListener('click', closeJumpModal);
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.remove('active');
+    if (e.target === modal) closeJumpModal();
   });
 
-  tocLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      modal.classList.remove('active');
+  // Smooth scroll jump function
+  function scrollToPage(pageNumber) {
+    const targetEl = document.getElementById('page-' + pageNumber);
+    closeJumpModal();
+    if (targetEl) {
+      setTimeout(() => {
+        const barHeight = document.querySelector('.bar')?.offsetHeight || 56;
+        const rect = targetEl.getBoundingClientRect();
+        const absoluteTop = window.pageYOffset + rect.top;
+        window.scrollTo({
+          top: absoluteTop - barHeight - 8,
+          behavior: 'smooth'
+        });
+      }, 50);
+    }
+  }
+
+  document.querySelectorAll('.toc-jump-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = link.getAttribute('href');
+      const pageNum = href.replace('#page-', '');
+      scrollToPage(pageNum);
     });
+  });
+
+  // --- FULLSCREEN ZOOM READER ---
+  const zoomViewer = document.getElementById('zoomViewer');
+  const zvImage = document.getElementById('zvImage');
+  const zvCanvas = document.getElementById('zvCanvas');
+  const zvPageNum = document.getElementById('zvPageNum');
+  const zvPageTitle = document.getElementById('zvPageTitle');
+  const zvScaleText = document.getElementById('zvScaleText');
+  const openZoomBtn = document.getElementById('openZoomBtn');
+  const zvCloseBtn = document.getElementById('zvCloseBtn');
+  const zvResetBtn = document.getElementById('zvResetBtn');
+  const zvZoomInBtn = document.getElementById('zvZoomInBtn');
+  const zvZoomOutBtn = document.getElementById('zvZoomOutBtn');
+  const zvPrevBtn = document.getElementById('zvPrevBtn');
+  const zvNextBtn = document.getElementById('zvNextBtn');
+
+  let currentZoomPage = 1;
+  let scale = 1;
+  let posX = 0;
+  let posY = 0;
+  let isDragging = false;
+  let startX = 0, startY = 0;
+  let lastTapTime = 0;
+  let initialPinchDistance = null;
+  let initialScale = 1;
+
+  function updateTransform() {
+    // constrain pan based on scale
+    if (scale <= 1) {
+      posX = 0;
+      posY = 0;
+    }
+    zvImage.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+    zvScaleText.textContent = Math.round(scale * 100) + '%';
+  }
+
+  function loadZoomSlide(page) {
+    currentZoomPage = Math.max(1, Math.min(18, page));
+    zvPageNum.textContent = `Page ${currentZoomPage} / 18`;
+    zvPageTitle.textContent = slideTitles[currentZoomPage] || `Page ${currentZoomPage}`;
+    
+    // Set high-res image source (WebP preferred, fallback to JPG)
+    zvImage.src = `images/webp/Mint%20Petroleum%20Company%20Profile%20${currentZoomPage}.webp`;
+    zvImage.onerror = function() {
+      zvImage.src = `images/Mint%20Petroleum%20Company%20Profile%20${currentZoomPage}_1600.jpg`;
+    };
+
+    resetZoom();
+  }
+
+  function resetZoom() {
+    scale = 1;
+    posX = 0;
+    posY = 0;
+    updateTransform();
+  }
+
+  function openZoom(page) {
+    loadZoomSlide(page || currentActivePage);
+    zoomViewer.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeZoom() {
+    zoomViewer.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Click on slide opens zoom
+  pageBoxes.forEach(box => {
+    box.addEventListener('click', () => {
+      const page = parseInt(box.getAttribute('data-page'), 10);
+      openZoom(page);
+    });
+  });
+
+  // Floating zoom button
+  openZoomBtn.addEventListener('click', () => {
+    openZoom(currentActivePage);
+  });
+
+  // TOC direct zoom buttons
+  document.querySelectorAll('.toc-zoom-direct').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const page = parseInt(btn.getAttribute('data-page'), 10);
+      closeJumpModal();
+      openZoom(page);
+    });
+  });
+
+  zvCloseBtn.addEventListener('click', closeZoom);
+  zvResetBtn.addEventListener('click', resetZoom);
+
+  // Zoom In / Out buttons
+  zvZoomInBtn.addEventListener('click', () => {
+    scale = Math.min(4, scale + 0.5);
+    updateTransform();
+  });
+
+  zvZoomOutBtn.addEventListener('click', () => {
+    scale = Math.max(1, scale - 0.5);
+    if (scale <= 1) { posX = 0; posY = 0; }
+    updateTransform();
+  });
+
+  // Prev / Next slide navigation
+  zvPrevBtn.addEventListener('click', () => {
+    if (currentZoomPage > 1) loadZoomSlide(currentZoomPage - 1);
+  });
+
+  zvNextBtn.addEventListener('click', () => {
+    if (currentZoomPage < 18) loadZoomSlide(currentZoomPage + 1);
+  });
+
+  // --- TOUCH GESTURES (Double Tap, Drag/Pan, Pinch) ---
+  zvCanvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      const now = Date.now();
+      if (now - lastTapTime < 300) {
+        // Double tap toggle zoom
+        if (scale > 1.2) {
+          resetZoom();
+        } else {
+          scale = 2.4;
+          updateTransform();
+        }
+        lastTapTime = 0;
+        return;
+      }
+      lastTapTime = now;
+
+      if (scale > 1) {
+        isDragging = true;
+        startX = e.touches[0].clientX - posX;
+        startY = e.touches[0].clientY - posY;
+      }
+    } else if (e.touches.length === 2) {
+      // Pinch to zoom start
+      isDragging = false;
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      initialPinchDistance = Math.hypot(dx, dy);
+      initialScale = scale;
+    }
+  }, { passive: true });
+
+  zvCanvas.addEventListener('touchmove', (e) => {
+    if (isDragging && e.touches.length === 1 && scale > 1) {
+      posX = e.touches[0].clientX - startX;
+      posY = e.touches[0].clientY - startY;
+      updateTransform();
+    } else if (e.touches.length === 2 && initialPinchDistance) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const currentDistance = Math.hypot(dx, dy);
+      const pinchFactor = currentDistance / initialPinchDistance;
+      scale = Math.min(4.5, Math.max(1, initialScale * pinchFactor));
+      updateTransform();
+    }
+  }, { passive: true });
+
+  zvCanvas.addEventListener('touchend', (e) => {
+    isDragging = false;
+    initialPinchDistance = null;
+    if (scale <= 1) {
+      posX = 0;
+      posY = 0;
+      updateTransform();
+    }
+  }, { passive: true });
+
+  // Keyboard navigation support
+  window.addEventListener('keydown', (e) => {
+    if (!zoomViewer.classList.contains('active')) return;
+    if (e.key === 'Escape') closeZoom();
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') zvNextBtn.click();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') zvPrevBtn.click();
+    if (e.key === '+' || e.key === '=') zvZoomInBtn.click();
+    if (e.key === '-') zvZoomOutBtn.click();
+    if (e.key === '0') resetZoom();
   });
 </script>
 
