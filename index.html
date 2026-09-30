@@ -102,6 +102,10 @@
     padding: 0 8px;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   /* Page wrapper with strict aspect ratio to prevent CLS */
   .page-box {
     position: relative;
@@ -111,6 +115,7 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    scroll-margin-top: 56px;
   }
 
   .page-box picture,
